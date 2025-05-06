@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:4.4
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+
+  orion:
+    image: fiware/orion
+    container_name: fiware-orion
+    depends_on:
+      - mongo
+    ports:
+      - "1026:1026"
+    command: -dbURI mongodb://mongo:27017 -logLevel DEBUG
+    environment:
+      - ORION_LOG_LEVEL=DEBUG
