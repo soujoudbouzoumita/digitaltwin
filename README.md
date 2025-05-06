@@ -1,4 +1,4 @@
-# Smart Plant House – Digital Twin Project 🌿
+# Smart Green House – Digital Twin Project 🌿
 
 ## Overview
 This is a simple Digital Twin system for a plant house that simulates temperature and humidity monitoring. The data is managed using a Context Broker (Orion), and alerts are generated if values exceed specified limits.
