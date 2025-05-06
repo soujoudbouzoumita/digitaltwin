@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   mongo:
@@ -6,14 +6,43 @@ services:
     container_name: mongo-db
     ports:
       - "27017:27017"
+    networks:
+      - dt-network
 
   orion:
     image: fiware/orion
     container_name: fiware-orion
-    depends_on:
-      - mongo
     ports:
       - "1026:1026"
+    depends_on:
+      - mongo
     command: -dbURI mongodb://mongo:27017 -logLevel DEBUG
     environment:
       - ORION_LOG_LEVEL=DEBUG
+    networks:
+      - dt-network
+  node-red:
+    image: nodered/node-red
+    container_name: mynodered
+    ports:
+      - "1880:1880"
+    environment:
+      - NODE_RED_CREDENTIAL_SECRET=supersecret
+    networks:
+      - dt-network
+    depends_on:
+      - orion
+    volumes:
+      - ./node-red-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1880/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  dt-network:
+    driver: bridge
+
+volumes:
+  node-red-data:
