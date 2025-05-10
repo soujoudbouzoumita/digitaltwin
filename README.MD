@@ -16,7 +16,7 @@ Basic knowledge of Node-RED, FIWARE, and IoT concepts
 Quick Start
 
 Clone this repository:
-git clone https://github.com/yourusername/smart-plant-twin.git
+git clone https://github.com/soujoudbouzoumita/smart-plant-twin.git
 cd smart-plant-twin
 
 Configure environment variables:
