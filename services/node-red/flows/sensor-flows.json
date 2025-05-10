@@ -1,0 +1,239 @@
+
+    {
+        "id": "sensor-flows",
+        "type": "tab",
+        "label": "Sensor Data Collection",
+        "disabled": false,
+        "info": "Flows for collecting and processing sensor data"
+    },
+    {
+        "id": "sensor-simulator",
+        "type": "inject",
+        "z": "sensor-flows",
+        "name": "Simulate Sensors (1 min)",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "simulate_sensors",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 120,
+        "wires": [
+            [
+                "generate-sensor-data"
+            ]
+        ]
+    },
+    {
+        "id": "generate-sensor-data",
+        "type": "function",
+        "z": "sensor-flows",
+        "name": "Generate Sensor Readings",
+        "func": "// Generate simulated sensor readings with slight variations\nconst plantId = 'Plant:001';\nconst baseTemp = 22.5;\nconst baseHumidity = 65.0;\nconst baseSoilMoisture = 75.0;\nconst baseLightIntensity = 850;\n\n// Add some random variations to simulate real sensors\nconst tempVariation = (Math.random() - 0.5) * 2; // +/- 1 degree\nconst humidityVariation = (Math.random() - 0.5) * 6; // +/- 3%\nconst soilMoistureVariation = (Math.random() - 0.5) * 10; // +/- 5%\nconst lightVariation = Math.floor((Math.random() - 0.5) * 200); // +/- 100 lux\n\n// Create sensor data objects\nconst temperature = {\n    id: plantId,\n    type: 'temperature',\n    value: baseTemp + tempVariation,\n    unit: 'CEL'\n};\n\nconst humidity = {\n    id: plantId,\n    type: 'humidity',\n    value: baseHumidity + humidityVariation,\n    unit: 'P1'\n};\n\nconst soilMoisture = {\n    id: plantId,\n    type: 'soilMoisture',\n    value: baseSoilMoisture + soilMoistureVariation,\n    unit: 'P1'\n};\n\nconst lightIntensity = {\n    id: plantId,\n    type: 'lightIntensity',\n    value: baseLightIntensity + lightVariation,\n    unit: 'LX'\n};\n\n// Create separate messages for each sensor\nreturn [\n    { payload: temperature, topic: 'temperature' },\n    { payload: humidity, topic: 'humidity' },\n    { payload: soilMoisture, topic: 'soilMoisture' },\n    { payload: lightIntensity, topic: 'lightIntensity' }\n];",
+        "outputs": 4,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 120,
+        "wires": [
+            [
+                "process-temperature"
+            ],
+            [
+                "process-humidity"
+            ],
+            [
+                "process-soil-moisture"
+            ],
+            [
+                "process-light"
+            ]
+        ]
+    },
+    {
+        "id": "process-temperature",
+        "type": "function",
+        "z": "sensor-flows",
+        "name": "Process Temperature",
+        "func": "// Get the temperature reading\nconst reading = msg.payload;\n\n// Add timestamp\nreading.timestamp = new Date().toISOString();\n\n// Store in context for historical data\nconst history = context.get('tempHistory') || [];\nif (history.length >= 100) {\n    history.shift(); // Remove oldest reading if we have 100 already\n}\nhistory.push({\n    value: reading.value,\n    timestamp: reading.timestamp\n});\ncontext.set('tempHistory', history);\n\n// Format for Orion Context Broker\nconst orionData = {\n    id: reading.id,\n    type: \"Plant\",\n    temperature: {\n        type: \"Float\",\n        value: reading.value,\n        metadata: {\n            unitCode: {\n                type: \"Text\",\n                value: reading.unit\n            },\n            timestamp: {\n                type: \"DateTime\",\n                value: reading.timestamp\n            }\n        }\n    }\n};\n\n// Format for MongoDB historical storage\nconst mongoData = {\n    entityId: reading.id,\n    entityType: \"Plant\",\n    attrName: \"temperature\",\n    attrType: \"Float\",\n    attrValue: reading.value,\n    timestamp: new Date()\n};\n\nreturn [\n    { payload: orionData, topic: \"updateOrion\" },\n    { payload: mongoData, topic: \"storeHistory\" },\n    { payload: { value: reading.value, unit: reading.unit, timestamp: reading.timestamp }, topic: \"temperature\" }\n];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "// Initialize temperature history\ncontext.set('tempHistory', []);",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 80,
+        "wires": [
+            [
+                "update-orion"
+            ],
+            [
+                "store-history"
+            ],
+            [
+                "dashboard-data"
+            ]
+        ]
+    },
+    {
+        "id": "process-humidity",
+        "type": "function",
+        "z": "sensor-flows",
+        "name": "Process Humidity",
+        "func": "// Get the humidity reading\nconst reading = msg.payload;\n\n// Add timestamp\nreading.timestamp = new Date().toISOString();\n\n// Store in context for historical data\nconst history = context.get('humidityHistory') || [];\nif (history.length >= 100) {\n    history.shift(); // Remove oldest reading if we have 100 already\n}\nhistory.push({\n    value: reading.value,\n    timestamp: reading.timestamp\n});\ncontext.set('humidityHistory', history);\n\n// Format for Orion Context Broker\nconst orionData = {\n    id: reading.id,\n    type: \"Plant\",\n    humidity: {\n        type: \"Float\",\n        value: reading.value,\n        metadata: {\n            unitCode: {\n                type: \"Text\",\n                value: reading.unit\n            },\n            timestamp: {\n                type: \"DateTime\",\n                value: reading.timestamp\n            }\n        }\n    }\n};\n\n// Format for MongoDB historical storage\nconst mongoData = {\n    entityId: reading.id,\n    entityType: \"Plant\",\n    attrName: \"humidity\",\n    attrType: \"Float\",\n    attrValue: reading.value,\n    timestamp: new Date()\n};\n\nreturn [\n    { payload: orionData, topic: \"updateOrion\" },\n    { payload: mongoData, topic: \"storeHistory\" },\n    { payload: { value: reading.value, unit: reading.unit, timestamp: reading.timestamp }, topic: \"humidity\" }\n];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "// Initialize humidity history\ncontext.set('humidityHistory', []);",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 120,
+        "wires": [
+            [
+                "update-orion"
+            ],
+            [
+                "store-history"
+            ],
+            [
+                "dashboard-data"
+            ]
+        ]
+    },
+    {
+        "id": "process-soil-moisture",
+        "type": "function",
+        "z": "sensor-flows",
+        "name": "Process Soil Moisture",
+        "func": "// Get the soil moisture reading\nconst reading = msg.payload;\n\n// Add timestamp\nreading.timestamp = new Date().toISOString();\n\n// Store in context for historical data\nconst history = context.get('soilMoistureHistory') || [];\nif (history.length >= 100) {\n    history.shift(); // Remove oldest reading if we have 100 already\n}\nhistory.push({\n    value: reading.value,\n    timestamp: reading.timestamp\n});\ncontext.set('soilMoistureHistory', history);\n\n// Format for Orion Context Broker\nconst orionData = {\n    id: reading.id,\n    type: \"Plant\",\n    soilMoisture: {\n        type: \"Float\",\n        value: reading.value,\n        metadata: {\n            unitCode: {\n                type: \"Text\",\n                value: reading.unit\n            },\n            timestamp: {\n                type: \"DateTime\",\n                value: reading.timestamp\n            }\n        }\n    }\n};\n\n// Format for MongoDB historical storage\nconst mongoData = {\n    entityId: reading.id,\n    entityType: \"Plant\",\n    attrName: \"soilMoisture\",\n    attrType: \"Float\",\n    attrValue: reading.value,\n    timestamp: new Date()\n};\n\nreturn [\n    { payload: orionData, topic: \"updateOrion\" },\n    { payload: mongoData, topic: \"storeHistory\" },\n    { payload: { value: reading.value, unit: reading.unit, timestamp: reading.timestamp }, topic: \"soilMoisture\" }\n];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "// Initialize soil moisture history\ncontext.set('soilMoistureHistory', []);",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 160,
+        "wires": [
+            [
+                "update-orion"
+            ],
+            [
+                "store-history"
+            ],
+            [
+                "dashboard-data"
+            ]
+        ]
+    },
+    {
+        "id": "process-light",
+        "type": "function",
+        "z": "sensor-flows",
+        "name": "Process Light Intensity",
+        "func": "// Get the light intensity reading\nconst reading = msg.payload;\n\n// Add timestamp\nreading.timestamp = new Date().toISOString();\n\n// Store in context for historical data\nconst history = context.get('lightHistory') || [];\nif (history.length >= 100) {\n    history.shift(); // Remove oldest reading if we have 100 already\n}\nhistory.push({\n    value: reading.value,\n    timestamp: reading.timestamp\n});\ncontext.set('lightHistory', history);\n\n// Format for Orion Context Broker\nconst orionData = {\n    id: reading.id,\n    type: \"Plant\",\n    lightIntensity: {\n        type: \"Integer\",\n        value: reading.value,\n        metadata: {\n            unitCode: {\n                type: \"Text\",\n                value: reading.unit\n            },\n            timestamp: {\n                type: \"DateTime\",\n                value: reading.timestamp\n            }\n        }\n    }\n};\n\n// Format for MongoDB historical storage\nconst mongoData = {\n    entityId: reading.id,\n    entityType: \"Plant\",\n    attrName: \"lightIntensity\",\n    attrType: \"Integer\",\n    attrValue: reading.value,\n    timestamp: new Date()\n};\n\nreturn [\n    { payload: orionData, topic: \"updateOrion\" },\n    { payload: mongoData, topic: \"storeHistory\" },\n    { payload: { value: reading.value, unit: reading.unit, timestamp: reading.timestamp }, topic: \"lightIntensity\" }\n];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "// Initialize light intensity history\ncontext.set('lightHistory', []);",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 200,
+        "wires": [
+            [
+                "update-orion"
+            ],
+            [
+                "store-history"
+            ],
+            [
+                "dashboard-data"
+            ]
+        ]
+    },
+    {
+        "id": "update-orion",
+        "type": "http request",
+        "z": "sensor-flows",
+        "name": "Update Orion",
+        "method": "PATCH",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://orion:1026/v2/entities/{{payload.id}}/attrs",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 940,
+        "y": 120,
+        "wires": [
+            [
+                "log-orion-update"
+            ]
+        ]
+    },
+    {
+        "id": "store-history",
+        "type": "mongodb out",
+        "z": "sensor-flows",
+        "mongodb": "mongodb-connection",
+        "name": "Store in MongoDB",
+        "collection": "measurements",
+        "payonly": true,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 950,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "log-orion-update",
+        "type": "debug",
+        "z": "sensor-flows",
+        "name": "Log Orion Update",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1150,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "dashboard-data",
+        "type": "link out",
+        "z": "sensor-flows",
+        "name": "To Dashboard",
+        "links": [
+            "dashboard-input"
+        ],
+        "x": 950,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "mongodb-connection",
+        "type": "mongodb",
+        "hostname": "mongodb",
+        "port": "27017",
+        "db": "plantHistory",
+        "name": "MongoDB Connection"
+    }
+        "

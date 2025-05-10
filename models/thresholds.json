@@ -1,0 +1,96 @@
+
+  "plants": {
+    "default": {
+      "temperature": {
+        "min": 18.0,
+        "max": 28.0,
+        "criticalMin": 15.0,
+        "criticalMax": 32.0,
+        "unit": "CEL"
+      },
+      "humidity": {
+        "min": 40.0,
+        "max": 80.0,
+        "criticalMin": 30.0,
+        "criticalMax": 90.0,
+        "unit": "P1"
+      },
+      "soilMoisture": {
+        "min": 40.0,
+        "max": 80.0,
+        "criticalMin": 20.0,
+        "criticalMax": 95.0,
+        "unit": "P1"
+      },
+      "lightIntensity": {
+        "min": 500,
+        "max": 10000,
+        "criticalMin": 200,
+        "criticalMax": 20000,
+        "unit": "LX"
+      }
+    },
+    "species": {
+      "Monstera deliciosa": {
+        "temperature": {
+          "min": 20.0,
+          "max": 30.0,
+          "criticalMin": 16.0,
+          "criticalMax": 35.0,
+          "unit": "CEL"
+        },
+        "humidity": {
+          "min": 50.0,
+          "max": 85.0,
+          "criticalMin": 40.0,
+          "criticalMax": 95.0,
+          "unit": "P1"
+        },
+        "soilMoisture": {
+          "min": 50.0,
+          "max": 75.0,
+          "criticalMin": 30.0,
+          "criticalMax": 90.0,
+          "unit": "P1"
+        },
+        "lightIntensity": {
+          "min": 800,
+          "max": 8000,
+          "criticalMin": 500,
+          "criticalMax": 15000,
+          "unit": "LX"
+        }
+      },
+      "Aloe vera": {
+        "temperature": {
+          "min": 15.0,
+          "max": 32.0,
+          "criticalMin": 10.0,
+          "criticalMax": 40.0,
+          "unit": "CEL"
+        },
+        "humidity": {
+          "min": 30.0,
+          "max": 50.0,
+          "criticalMin": 20.0,
+          "criticalMax": 70.0,
+          "unit": "P1"
+        },
+        "soilMoisture": {
+          "min": 20.0,
+          "max": 40.0,
+          "criticalMin": 10.0,
+          "criticalMax": 60.0,
+          "unit": "P1"
+        },
+        "lightIntensity": {
+          "min": 2000,
+          "max": 15000,
+          "criticalMin": 1000,
+          "criticalMax": 25000,
+          "unit": "LX"
+        }
+      }
+    }
+  }
+}

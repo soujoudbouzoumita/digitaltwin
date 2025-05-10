@@ -1,24 +1,54 @@
-# Smart Plant House – Digital Twin Project 🌿
+Smart Plant Digital Twin
+This project implements a digital twin system for monitoring and managing plants using IoT sensors, FIWARE Orion Context Broker, and Node-RED.
+Architecture Overview
+The Smart Plant Digital Twin system consists of the following components:
 
-## Overview
-This is a simple Digital Twin system for a plant house that simulates temperature and humidity monitoring. The data is managed using a Context Broker (Orion), and alerts are generated if values exceed specified limits.
+Node-RED: Flow-based programming tool for sensor data acquisition, processing, and dashboard visualization
+Orion Context Broker: FIWARE component for managing context data (current state of plant entities)
+MongoDB: Database for storing historical sensor data and context information
 
-## Features
-- Simulated IoT sensors for temperature and humidity- Orion Context Broker for storing and updating plant house state
-- Subscriptions to trigger alerts on threshold breaches
-- Docker Compose deployment
-- Easy to extend with real sensors in the future
+Prerequisites
 
-## Stack
-- Python (simulators)
-- Orion Context Broker
-- MongoDB
-- Docker, Docker Compose
+Docker and Docker Compose
+Git (for version control)
+Basic knowledge of Node-RED, FIWARE, and IoT concepts
 
-## How It Works
-1. Simulators send temperature/humidity updates to Orion.
-2. Orion updates the twin's state.
-3. Subscriptions watch for abnormal values.
-4. Alerts are logged or sent to a simple endpoint.
+Quick Start
+
+Clone this repository:
+git clone https://github.com/yourusername/smart-plant-twin.git
+cd smart-plant-twin
+
+Configure environment variables:
+cp .env.example .env
+# Edit .env file with your settings
+
+Start the services:
+docker-compose up -d
+
+Access the services:
+
+Node-RED: http://localhost:1880
+Node-RED Dashboard: http://localhost:1880/ui
+Orion Context Broker: http://localhost:1026/version
 
 
+
+Setting Up Sensors
+This project supports various plant monitoring sensors:
+
+Temperature sensors
+Humidity sensors
+Light intensity sensors
+Soil moisture sensors
+
+Sensor data is collected via Node-RED flows that connect to the physical sensors and publish the data to the Orion Context Broker.
+Development Workflow
+
+Set up sensor data acquisition in Node-RED
+Create entity models for your plants in Orion
+Configure dashboards in Node-RED to visualize sensor data
+Set up notification thresholds for critical conditions
+
+License
+MIT License

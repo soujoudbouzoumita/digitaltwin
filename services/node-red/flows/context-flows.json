@@ -1,0 +1,443 @@
+
+hello i want to build  a digital twin project i do this road map but after a deep researching i know that i can do the section of sensor in the nodred so i hope you help me clean this roadmap profisonnely and strt step by step toghether to finish the building of this project smart-plant-twin/
+├── docker-compose.yml            # Fichier pour déployer Orion, MongoDB, Node-RED et les autres services nécessaires
+├── .env                          # Fichier pour stocker les variables d'environnement (tokens, clés API, etc.)
+├── README.md                     # Documentation générale du projet, y compris les étapes de déploiement
+│
+├── orion/                         # Dossier pour gérer Orion Context Broker (stockage des données IoT)
+│   ├── orion-config.json          # Fichier de configuration pour Orion (gestion des entités, abonnements, etc.)
+│   └── subscriptions.json         # Abonnements aux capteurs : température, humidité, etc.
+│
+├── mongodb/                       # Dossier pour MongoDB (base de données NoSQL pour stocker les données des capteurs)
+│   ├── mongo-init.js              # Script pour initialiser MongoDB, créer les collections, index et importer des données de test
+│   └── data/                      # Dossier où MongoDB stocke les données collectées par Orion
+│       └── plant_data.json        # Exemples de données pour les plantes (température, humidité, etc.)
+│
+├── node-red/                      # Dossier pour la configuration de Node-RED (interface et flux de données)
+│   ├── flows.json                 # Fichier d'export Node-RED contenant les flux pour récupérer les données, traiter et envoyer des alertes
+│   ├── settings.js                # Fichier de configuration Node-RED (paramètres d'intégration avec MongoDB et Orion)
+│   └── dashboard/                 # Dossier pour l'interface graphique dans Node-RED (tableaux de bord)
+│       ├── ui-dashboard.json      # Configuration du tableau de bord pour afficher les données des capteurs
+│       └── ui-config.json         # Configuration des widgets du tableau de bord (graphique, alertes, etc.)
+│
+├── notifier/                       # Dossier pour la gestion des notifications (par exemple, envoi via Telegram)
+│   ├── send_telegram_alert.py     # Script Python pour envoyer des alertes à Telegram si les seuils sont dépassés
+│   └── notifier-config.json       # Configuration pour l'envoi des notifications (tokens Telegram, messages d'alerte)
+│
+├── data/                           # Dossier pour stocker les logs et historiques des mesures
+│   └── logs.csv                   # Fichier où sont stockées les mesures historiques des capteurs
+│
+├── src/                            # Dossier pour la logique métier, l'intégration avec Orion et les capteurs
+│   ├── sensors/                   # Sous-dossier pour la gestion des capteurs (lecture des données, configuration)
+│   │   ├── sensor_reader.py       # Script Python pour lire les données des capteurs (température, humidité)
+│   │   └── sensor_config.json     # Fichier de configuration des capteurs (types de capteurs, protocoles)
+│   ├── logic/                     # Sous-dossier pour la logique métier : seuils et vérifications
+│   │   └── threshold_checker.py   # Script qui vérifie si les valeurs des capteurs dépassent les seuils
+│   └── utils/                     # Sous-dossier pour les fonctions utilitaires
+│       └── plant_utils.py         # Fonctions pour manipuler et analyser les données des plantes (par exemple, seuils)
+│
+└── utils/                          # Dossier pour les fonctions utilitaires communes au projet
+    └── plant_utils.py             # Fonctions utilitaires globales utilisées par plusieurs composants
+
+Modifier
+I'd be happy to help you build a digital twin project step by step. I understand you've discovered that you can integrate sensors directly in Node-RED, which will simplify your architecture. Let's refine your roadmap and create a more professional, streamlined structure.
+
+First, let's clean up the roadmap by removing redundancies and creating a more focused directory structure that better aligns with digital twin best practices.
+
+Refined Digital Twin Project Structure
+smart-plant-twin/
+├── docker-compose.yml          # Deployment configuration for all services
+├── .env                        # Environment variables (API keys, credentials)
+├── README.md                   # Project documentation and setup instructions
+│
+├── services/                   # Core services configuration
+│   ├── orion/                  # FIWARE Orion Context Broker
+│   │   └── config.json         # Orion configuration and entity models
+│   │
+│   ├── mongodb/                # Persistence layer
+│   │   └── init-scripts/       # MongoDB initialization scripts
+│   │       └── create-indexes.js
+│   │
+│   └── node-red/              # Node-RED service (flow orchestration)
+│       ├── flows/              # Main flows for the application
+│       │   ├── sensor-flows.json     # Sensor data acquisition and processing
+│       │   ├── context-flows.json    # Context management with Orion
+│       │   └── notification-flows.json # Alert and notification handling
+│       │
+│       ├── settings.js         # Node-RED configuration
+│       └── dashboard/          # Dashboard configuration
+│           └── ui-config.json  # UI layout and widget settings
+│
+├── models/                     # Digital twin data models
+│   ├── plant-model.json        # Plant entity model definition
+│   ├── sensor-models/          # Sensor models and configurations
+│   │   ├── temperature.json
+│   │   ├── humidity.json
+│   │   └── light.json
+│   └── thresholds.json         # Threshold configurations for alerts
+│
+├── data/                       # Data storage
+│   ├── historical/             # Historical data storage
+│   └── backups/                # Backup configurations
+│
+└── docs/                       # Project documentation
+    ├── setup-guide.md          # Detailed setup instructions
+    ├── architecture.md         # Architecture documentation
+    └── api-reference.md        # API documentation
+Let's now work through this project step by step:
+
+Step 1: Project Setup and Environment Configuration
+Let's start by setting up the basic project structure and Docker environment.
+
+
+docker-compose.yml
+Code 
+
+.env
+Code 
+
+README.md
+Document 
+Step 2: Set up Orion Context Broker Configuration
+Let's define the entity models for our plants in the Orion Context Broker:
+
+
+services/orion/config.json
+Code 
+Step 3: Configure MongoDB initialization
+
+services/mongodb/init-scripts/create-indexes.js
+Code 
+Step 4: Define Plant and Sensor Models
+
+models/plant-model.json
+Code 
+
+models/thresholds.json
+Code 
+Step 5: Create Node-RED Flows
+Now, let's set up the Node-RED flows for sensor data acquisition, processing, and visualization:
+
+
+services/node-red/flows/sensor-flows.json
+Code 
+
+
+
+
+Continuer
+
+Modifier
+Let's continue building the Node-RED flows for the digital twin project. Let's complete the sensor flows and add the context management and dashboard components.
+
+
+services/node-red/flows/sensor-flows.json
+Code ∙ Version 2 
+Now, let's create the context management flows for working with the Orion Context Broker:
+
+
+services/node-red/flows/context-flows.json
+Code 
+
+
+
+
+Continuerrm lsmv 
+
+[
+    {
+        "id": "context-flows",
+        "type": "tab",
+        "label": "Context Management",
+        "disabled": false,
+        "info": "Flows for managing context data with Orion Context Broker"
+    },
+    {
+        "id": "orion-notification-endpoint",
+        "type": "http in",
+        "z": "context-flows",
+        "name": "Orion Notifications",
+        "url": "/orion/notification",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "process-orion-notification"
+            ]
+        ]
+    },
+    {
+        "id": "process-orion-notification",
+        "type": "function",
+        "z": "context-flows",
+        "name": "Process Notification",
+        "func": "// Extract data from Orion notification\nconst data = msg.payload.data;\n\nif (!data || !Array.isArray(data) || data.length === 0) {\n    node.warn(\"Invalid notification data received\");\n    return null;\n}\n\n// Get the first entity from the notification\nconst entity = data[0];\nconst entityId = entity.id;\n\n// Create messages for each attribute in the notification\nconst messages = [];\n\n// Process temperature if present\nif (entity.temperature) {\n    messages.push({\n        payload: {\n            id: entityId,\n            type: 'temperature',\n            value: entity.temperature.value,\n            metadata: entity.temperature.metadata || {}\n        },\n        topic: 'temperature'\n    });\n}\n\n// Process humidity if present\nif (entity.humidity) {\n    messages.push({\n        payload: {\n            id: entityId,\n            type: 'humidity',\n            value: entity.humidity.value,\n            metadata: entity.humidity.metadata || {}\n        },\n        topic: 'humidity'\n    });\n}\n\n// Process soil moisture if present\nif (entity.soilMoisture) {\n    messages.push({\n        payload: {\n            id: entityId,\n            type: 'soilMoisture',\n            value: entity.soilMoisture.value,\n            metadata: entity.soilMoisture.metadata || {}\n        },\n        topic: 'soilMoisture'\n    });\n}\n\n// Process light intensity if present\nif (entity.lightIntensity) {\n    messages.push({\n        payload: {\n            id: entityId,\n            type: 'lightIntensity',\n            value: entity.lightIntensity.value,\n            metadata: entity.lightIntensity.metadata || {}\n        },\n        topic: 'lightIntensity'\n    });\n}\n\n// HTTP response to Orion\nmsg.statusCode = 200;\nmsg.payload = { status: \"Notification received\" };\n\n// Return the response message and messages for each attribute\nreturn [msg, messages];\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 120,
+        "wires": [
+            [
+                "http-response"
+            ],
+            [
+                "check-thresholds"
+            ]
+        ]
+    },
+    {
+        "id": "http-response",
+        "type": "http response",
+        "z": "context-flows",
+        "name": "HTTP Response",
+        "statusCode": "",
+        "headers": {},
+        "x": 640,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "check-thresholds",
+        "type": "function",
+        "z": "context-flows",
+        "name": "Check Thresholds",
+        "func": "// Get thresholds from context (loaded at startup)\nconst thresholds = flow.get('thresholds') || {};\n\nif (!thresholds.plants) {\n    node.warn(\"No threshold configuration found\");\n    return null;\n}\n\n// Get plant species for species-specific thresholds\nconst getPlantDetails = async (entityId) => {\n    // Fetch the plant entity to get its species\n    const url = `http://orion:1026/v2/entities/${entityId}?attrs=species`;\n    \n    try {\n        const response = await fetch(url);\n        const plantData = await response.json();\n        \n        if (plantData && plantData.species && plantData.species.value) {\n            return {\n                species: plantData.species.value\n            };\n        }\n        \n        return null;\n    } catch (error) {\n        node.error(`Error fetching plant data: ${error.message}`);\n        return null;\n    }\n};\n\n// Function to get appropriate thresholds for a plant\nconst getThresholdsForPlant = (species) => {\n    // Check if we have species-specific thresholds\n    if (species && thresholds.plants.species && thresholds.plants.species[species]) {\n        return thresholds.plants.species[species];\n    }\n    \n    // Otherwise return default thresholds\n    return thresholds.plants.default;\n};\n\n// Process each message and check against thresholds\nconst processMessage = async (msg) => {\n    const reading = msg.payload;\n    const readingType = reading.type; // temperature, humidity, etc.\n    const entityId = reading.id;\n    \n    // Get plant details to find appropriate thresholds\n    const plantDetails = await getPlantDetails(entityId);\n    const plantThresholds = getThresholdsForPlant(plantDetails ? plantDetails.species : null);\n    \n    // If we have thresholds for this reading type\n    if (plantThresholds && plantThresholds[readingType]) {\n        const thresholdConfig = plantThresholds[readingType];\n        const value = reading.value;\n        \n        // Check if value is outside thresholds\n        let status = 'normal';\n        let alertMessage = null;\n        \n        if (value < thresholdConfig.criticalMin) {\n            status = 'critical_low';\n            alertMessage = `CRITICAL: ${readingType} is extremely low (${value} ${thresholdConfig.unit})`;\n        } else if (value > thresholdConfig.criticalMax) {\n            status = 'critical_high';\n            alertMessage = `CRITICAL: ${readingType} is extremely high (${value} ${thresholdConfig.unit})`;\n        } else if (value < thresholdConfig.min) {\n            status = 'warning_low';\n            alertMessage = `WARNING: ${readingType} is low (${value} ${thresholdConfig.unit})`;\n        } else if (value > thresholdConfig.max) {\n            status = 'warning_high';\n            alertMessage = `WARNING: ${readingType} is high (${value} ${thresholdConfig.unit})`;\n        }\n        \n        // If status is not normal, send alert\n        if (status !== 'normal' && alertMessage) {\n            return {\n                payload: {\n                    entityId: entityId,\n                    readingType: readingType,\n                    value: value,\n                    unit: thresholdConfig.unit,\n                    status: status,\n                    message: alertMessage,\n                    timestamp: new Date().toISOString()\n                },\n                topic: `alert_${readingType}`\n            };\n        }\n    }\n    \n    return null;\n};\n\n// Process the input messages asynchronously\n(async () => {\n    const inputMsgs = Array.isArray(msg) ? msg : [msg];\n    const alertMsgs = [];\n    \n    for (const inputMsg of inputMsgs) {\n        const alertMsg = await processMessage(inputMsg);\n        if (alertMsg) {\n            alertMsgs.push(alertMsg);\n        }\n    }\n    \n    // If we have alerts, send them\n    if (alertMsgs.length > 0) {\n        node.send(alertMsgs);\n    }\n})();",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Load threshold configuration at startup\nconst fs = global.get('fs');\nconst path = global.get('path');\n\ntry {\n    // Path to thresholds file\n    const thresholdsPath = path.join(process.env.NODE_RED_HOME, 'thresholds.json');\n    \n    // Check if file exists\n    if (fs.existsSync(thresholdsPath)) {\n        // Read and parse thresholds file\n        const thresholdsData = fs.readFileSync(thresholdsPath, 'utf8');\n        const thresholds = JSON.parse(thresholdsData);\n        \n        // Store thresholds in flow context\n        flow.set('thresholds', thresholds);\n        node.log('Thresholds loaded successfully');\n    } else {\n        // Use default thresholds if file doesn't exist\n        const defaultThresholds = {\n            \"plants\": {\n                \"default\": {\n                    \"temperature\": {\n                        \"min\": 18.0,\n                        \"max\": 28.0,\n                        \"criticalMin\": 15.0,\n                        \"criticalMax\": 32.0,\n                        \"unit\": \"CEL\"\n                    },\n                    \"humidity\": {\n                        \"min\": 40.0,\n                        \"max\": 80.0,\n                        \"criticalMin\": 30.0,\n                        \"criticalMax\": 90.0,\n                        \"unit\": \"P1\"\n                    },\n                    \"soilMoisture\": {\n                        \"min\": 40.0,\n                        \"max\": 80.0,\n                        \"criticalMin\": 20.0,\n                        \"criticalMax\": 95.0,\n                        \"unit\": \"P1\"\n                    },\n                    \"lightIntensity\": {\n                        \"min\": 500,\n                        \"max\": 10000,\n                        \"criticalMin\": 200,\n                        \"criticalMax\": 20000,\n                        \"unit\": \"LX\"\n                    }\n                }\n            }\n        };\n        \n        flow.set('thresholds', defaultThresholds);\n        node.warn('Thresholds file not found, using default values');\n    }\n} catch (error) {\n    node.error(`Error loading thresholds: ${error.message}`);\n}",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 120,
+        "wires": [
+            [
+                "send-alerts"
+            ]
+        ]
+    },
+    {
+        "id": "send-alerts",
+        "type": "switch",
+        "z": "context-flows",
+        "name": "Alert Type",
+        "property": "payload.status",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^critical_",
+                "vt": "str",
+                "case": false
+            },
+            {
+                "t": "regex",
+                "v": "^warning_",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 840,
+        "y": 120,
+        "wires": [
+            [
+                "critical-alert"
+            ],
+            [
+                "warning-alert"
+            ]
+        ]
+    },
+    {
+        "id": "critical-alert",
+        "type": "function",
+        "z": "context-flows",
+        "name": "Format Critical Alert",
+        "func": "// Format critical alert for notification\nconst alert = msg.payload;\n\n// Only send new critical alerts (prevent spamming)\nconst alertKey = `${alert.entityId}_${alert.readingType}_${alert.status}`;\nconst lastAlertTime = context.get(alertKey) || 0;\nconst now = Date.now();\n\n// Only send alert if last one was more than 15 minutes ago\nconst alertInterval = 15 * 60 * 1000; // 15 minutes in milliseconds\n\nif (now - lastAlertTime > alertInterval) {\n    // Update last alert time\n    context.set(alertKey, now);\n    \n    // Create notification message\n    const notificationMsg = {\n        payload: {\n            title: `CRITICAL ALERT: Plant ${alert.entityId}`,\n            message: alert.message,\n            details: `Current value: ${alert.value} ${alert.unit}\\nStatus: ${alert.status}\\nTimestamp: ${alert.timestamp}`\n        },\n        topic: \"critical_alert\"\n    };\n    \n    // Create dashboard message\n    const dashboardMsg = {\n        payload: {\n            ...alert,\n            level: \"critical\"\n        },\n        topic: \"alert\"\n    };\n    \n    // Return both messages\n    return [notificationMsg, dashboardMsg];\n}\n\n// No alert needed\nreturn [null, null];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 80,
+        "wires": [
+            [
+                "send-telegram"
+            ],
+            [
+                "dashboard-alerts"
+            ]
+        ]
+    },
+    {
+        "id": "warning-alert",
+        "type": "function",
+        "z": "context-flows",
+        "name": "Format Warning Alert",
+        "func": "// Format warning alert for dashboard only\nconst alert = msg.payload;\n\n// Only send new warnings (prevent spamming)\nconst alertKey = `${alert.entityId}_${alert.readingType}_${alert.status}`;\nconst lastAlertTime = context.get(alertKey) || 0;\nconst now = Date.now();\n\n// Only send alert if last one was more than 30 minutes ago\nconst alertInterval = 30 * 60 * 1000; // 30 minutes in milliseconds\n\nif (now - lastAlertTime > alertInterval) {\n    // Update last alert time\n    context.set(alertKey, now);\n    \n    // Create dashboard message\n    const dashboardMsg = {\n        payload: {\n            ...alert,\n            level: \"warning\"\n        },\n        topic: \"alert\"\n    };\n    \n    return dashboardMsg;\n}\n\n// No alert needed\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 160,
+        "wires": [
+            [
+                "dashboard-alerts"
+            ]
+        ]
+    },
+    {
+        "id": "send-telegram",
+        "type": "function",
+        "z": "context-flows",
+        "name": "Send Telegram Alert",
+        "func": "// Get Telegram configuration from environment variables\nconst telegramToken = env.get('TELEGRAM_BOT_TOKEN');\nconst telegramChatId = env.get('TELEGRAM_CHAT_ID');\n\n// Skip if Telegram is not configured\nif (!telegramToken || !telegramChatId) {\n    node.warn(\"Telegram not configured, skipping notification\");\n    return null;\n}\n\n// Format message for Telegram\nconst alert = msg.payload;\nconst text = `${alert.title}\\n\\n${alert.message}\\n\\n${alert.details}`;\n\n// Create HTTP request to Telegram API\nconst telegramMsg = {\n    url: `https://api.telegram.org/bot${telegramToken}/sendMessage`,\n    method: 'POST',\n    headers: {\n        'Content-Type': 'application/json'\n    },\n    payload: {\n        chat_id: telegramChatId,\n        text: text,\n        parse_mode: 'Markdown'\n    }\n};\n\nreturn telegramMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1300,
+        "y": 80,
+        "wires": [
+            [
+                "telegram-http"
+            ]
+        ]
+    },
+    {
+        "id": "telegram-http",
+        "type": "http request",
+        "z": "context-flows",
+        "name": "Telegram API",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 1490,
+        "y": 80,
+        "wires": [
+            [
+                "log-telegram"
+            ]
+        ]
+    },
+    {
+        "id": "log-telegram",
+        "type": "debug",
+        "z": "context-flows",
+        "name": "Log Telegram",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1670,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "dashboard-alerts",
+        "type": "link out",
+        "z": "context-flows",
+        "name": "To Dashboard Alerts",
+        "links": [
+            "dashboard-alerts-input"
+        ],
+        "x": 1300,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "initialize-entity",
+        "type": "inject",
+        "z": "context-flows",
+        "name": "Initialize Entity (on start)",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5",
+        "topic": "initialize",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 200,
+        "wires": [
+            [
+                "create-entity"
+            ]
+        ]
+    },
+    {
+        "id": "create-entity",
+        "type": "function",
+        "z": "context-flows",
+        "name": "Create Plant Entity",
+        "func": "// Create initial plant entity configuration\nconst plantEntity = {\n    id: \"Plant:001\",\n    type: \"Plant\",\n    name: {\n        type: \"Text\",\n        value: \"Monstera Deliciosa\"\n    },\n    species: {\n        type: \"Text\",\n        value: \"Monstera deliciosa\"\n    },\n    location: {\n        type: \"Text\",\n        value: \"Living Room\"\n    },\n    temperature: {\n        type: \"Float\",\n        value: 22.5,\n        metadata: {\n            unitCode: {\n                type: \"Text\",\n                value: \"CEL\"\n            }\n        }\n    },\n    humidity: {\n        type: \"Float\",\n        value: 65.0,\n        metadata: {\n            unitCode: {\n                type: \"Text\",\n                value: \"P1\"\n            }\n        }\n    },\n    soilMoisture: {\n        type: \"Float\",\n        value: 75.0,\n        metadata: {\n            unitCode: {\n                type: \"Text\",\n                value: \"P1\"\n            }\n        }\n    },\n    lightIntensity: {\n        type: \"Integer\",\n        value: 850,\n        metadata: {\n            unitCode: {\n                type: \"Text\",\n                value: \"LX\"\n            }\n        }\n    },\n    lastWatered: {\n        type: \"DateTime\",\n        value: new Date().toISOString()\n    },\n    healthStatus: {\n        type: \"Text\",\n        value: \"Good\"\n    }\n};\n\n// Create HTTP request message\nconst msg = {\n    url: \"http://orion:1026/v2/entities\",\n    method: \"POST\",\n    headers: {\n        \"Content-Type\": \"application/json\"\n    },\n    payload: plantEntity\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 200,
+        "wires": [
+            [
+                "check-entity-exists"
+            ]
+        ]
+    },
+    {
+        "id": "check-entity-exists",
+        "type": "http request",
+        "z": "context-flows",
+        "name": "Check If Entity Exists",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://orion:1026/v2/entities/Plant:001",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 630,
+        "y": 200,
+        "wires": [
+            [
+                "handle-entity-check"
+            ]
+        ]
+    },
+    {
+        "id": "handle-entity-check",
+        "type": "function",
+        "z": "context-flows",
+        "name": "Handle Entity Check",
+        "func": "// Check if entity exists based on response\nif (msg.statusCode === 200) {\n    // Entity exists, log it\n    node.log(\"Plant entity already exists, skipping creation\");\n    return null;\n} else if (msg.statusCode === 404) {\n    // Entity doesn't exist, create it\n    node.log(\"Plant entity doesn't exist, creating it\");\n    \n    // Get the entity data from previous message\n    const entityData = msg.req.payload;\n    \n    // Create HTTP request to create entity\n    return {\n        url:

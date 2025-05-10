@@ -1,0 +1,102 @@
+
+  "entities": [
+    {
+      "id": "Plant:001",
+      "type": "Plant",
+      "name": {
+        "type": "Text",
+        "value": "Monstera Deliciosa"
+      },
+      "species": {
+        "type": "Text",
+        "value": "Monstera deliciosa"
+      },
+      "location": {
+        "type": "Text",
+        "value": "Living Room"
+      },
+      "temperature": {
+        "type": "Float",
+        "value": 22.5,
+        "metadata": {
+          "unitCode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Float",
+        "value": 65.0,
+        "metadata": {
+          "unitCode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "soilMoisture": {
+        "type": "Float",
+        "value": 75.0,
+        "metadata": {
+          "unitCode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "lightIntensity": {
+        "type": "Integer",
+        "value": 850,
+        "metadata": {
+          "unitCode": {
+            "type": "Text",
+            "value": "LX"
+          }
+        }
+      },
+      "lastWatered": {
+        "type": "DateTime",
+        "value": "2025-05-05T08:30:00Z"
+      },
+      "healthStatus": {
+        "type": "Text",
+        "value": "Good"
+      }
+    }
+  ],
+  "subscriptions": [
+    {
+      "description": "Notify Node-RED when plant attributes change",
+      "subject": {
+        "entities": [
+          {
+            "idPattern": "Plant:.*",
+            "type": "Plant"
+          }
+        ],
+        "condition": {
+          "attrs": [
+            "temperature",
+            "humidity",
+            "soilMoisture",
+            "lightIntensity"
+          ]
+        }
+      },
+      "notification": {
+        "http": {
+          "url": "http://node-red:1880/orion/notification"
+        },
+        "attrs": [
+          "temperature",
+          "humidity",
+          "soilMoisture",
+          "lightIntensity",
+          "name",
+          "location"
+        ]
+      }
+    }
+  ]
+}

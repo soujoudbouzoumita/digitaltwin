@@ -1,0 +1,147 @@
+
+  "$schema": "http://json-schema.org/schema#",
+  "id": "https://smart-plant-twin/plant-model.json",
+  "title": "Plant Model",
+  "description": "Data model for a plant in the smart plant digital twin",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "name",
+    "species"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the plant"
+    },
+    "type": {
+      "type": "string",
+      "description": "Entity type, must be 'Plant'",
+      "enum": ["Plant"]
+    },
+    "name": {
+      "type": "object",
+      "description": "Plant's common name",
+      "properties": {
+        "type": { "type": "string", "enum": ["Text"] },
+        "value": { "type": "string" }
+      }
+    },
+    "species": {
+      "type": "object",
+      "description": "Scientific name of the plant",
+      "properties": {
+        "type": { "type": "string", "enum": ["Text"] },
+        "value": { "type": "string" }
+      }
+    },
+    "location": {
+      "type": "object",
+      "description": "Physical location of the plant",
+      "properties": {
+        "type": { "type": "string", "enum": ["Text"] },
+        "value": { "type": "string" }
+      }
+    },
+    "temperature": {
+      "type": "object",
+      "description": "Ambient temperature around the plant",
+      "properties": {
+        "type": { "type": "string", "enum": ["Float"] },
+        "value": { "type": "number" },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "unitCode": {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string", "enum": ["Text"] },
+                "value": { "type": "string", "enum": ["CEL"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "humidity": {
+      "type": "object",
+      "description": "Ambient humidity around the plant",
+      "properties": {
+        "type": { "type": "string", "enum": ["Float"] },
+        "value": { "type": "number" },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "unitCode": {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string", "enum": ["Text"] },
+                "value": { "type": "string", "enum": ["P1"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "soilMoisture": {
+      "type": "object",
+      "description": "Soil moisture level",
+      "properties": {
+        "type": { "type": "string", "enum": ["Float"] },
+        "value": { "type": "number" },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "unitCode": {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string", "enum": ["Text"] },
+                "value": { "type": "string", "enum": ["P1"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "lightIntensity": {
+      "type": "object",
+      "description": "Light intensity level",
+      "properties": {
+        "type": { "type": "string", "enum": ["Integer"] },
+        "value": { "type": "integer" },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "unitCode": {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string", "enum": ["Text"] },
+                "value": { "type": "string", "enum": ["LX"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "lastWatered": {
+      "type": "object",
+      "description": "Timestamp of the last watering",
+      "properties": {
+        "type": { "type": "string", "enum": ["DateTime"] },
+        "value": { "type": "string", "format": "date-time" }
+      }
+    },
+    "healthStatus": {
+      "type": "object",
+      "description": "Overall health status of the plant",
+      "properties": {
+        "type": { "type": "string", "enum": ["Text"] },
+        "value": { 
+          "type": "string",
+          "enum": ["Excellent", "Good", "Fair", "Poor", "Critical"]
+        }
+      }
+    }
+  }
+}
