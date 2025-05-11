@@ -1,0 +1,392 @@
+
+  "site": {
+    "name": "Smart Plant Digital Twin",
+    "description": "Dashboard for plant monitoring and digital twin visualization",
+    "theme": {
+      "name": "theme-light",
+      "custom": {
+        "primary": "#4CAF50",
+        "page-background": "#f0f2f5",
+        "group-background": "#ffffff",
+        "group-border": "#e8e8e8",
+        "widget-background": "#ffffff",
+        "widget-border": "#e0e0e0"
+      }
+    }
+  },
+  "pages": [
+    {
+      "id": "home",
+      "name": "Overview",
+      "layout": "grid",
+      "content": [
+        {
+          "type": "group",
+          "id": "plant_overview",
+          "name": "Plant Overview",
+          "width": 12,
+          "height": 1,
+          "order": 1,
+          "widgets": [
+            {
+              "type": "ui_text",
+              "name": "Plant Information",
+              "order": 1,
+              "width": 6,
+              "height": 1
+            },
+            {
+              "type": "ui_button",
+              "name": "Refresh Data",
+              "order": 2,
+              "width": 2,
+              "height": 1
+            },
+            {
+              "type": "ui_dropdown",
+              "name": "Select Plant",
+              "order": 3,
+              "width": 4,
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "plant_metrics",
+          "name": "Current Metrics",
+          "width": 12,
+          "height": 5,
+          "order": 2,
+          "widgets": [
+            {
+              "type": "ui_gauge",
+              "name": "Temperature",
+              "order": 1,
+              "width": 3,
+              "height": 3
+            },
+            {
+              "type": "ui_gauge",
+              "name": "Humidity",
+              "order": 2,
+              "width": 3,
+              "height": 3
+            },
+            {
+              "type": "ui_gauge",
+              "name": "Light Intensity",
+              "order": 3,
+              "width": 3,
+              "height": 3
+            },
+            {
+              "type": "ui_gauge",
+              "name": "Soil Moisture",
+              "order": 4,
+              "width": 3,
+              "height": 3
+            },
+            {
+              "type": "ui_chart",
+              "name": "Temperature History",
+              "order": 5,
+              "width": 6,
+              "height": 2
+            },
+            {
+              "type": "ui_chart",
+              "name": "Humidity History",
+              "order": 6,
+              "width": 6,
+              "height": 2
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "plant_status",
+          "name": "Plant Status",
+          "width": 6,
+          "height": 4,
+          "order": 3,
+          "widgets": [
+            {
+              "type": "ui_template",
+              "name": "Health Status",
+              "order": 1,
+              "width": 6,
+              "height": 2
+            },
+            {
+              "type": "ui_text",
+              "name": "Last Update",
+              "order": 2,
+              "width": 6,
+              "height": 1
+            },
+            {
+              "type": "ui_button",
+              "name": "Care Instructions",
+              "order": 3,
+              "width": 6,
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "plant_alerts",
+          "name": "Alerts & Notifications",
+          "width": 6,
+          "height": 4,
+          "order": 4,
+          "widgets": [
+            {
+              "type": "ui_notification",
+              "name": "Alert Notifications",
+              "order": 1,
+              "width": 6,
+              "height": 1
+            },
+            {
+              "type": "ui_template",
+              "name": "Recent Alerts",
+              "order": 2,
+              "width": 6,
+              "height": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "digital_twin",
+      "name": "Digital Twin View",
+      "layout": "grid",
+      "content": [
+        {
+          "type": "group",
+          "id": "twin_visualization",
+          "name": "Plant Digital Twin",
+          "width": 8,
+          "height": 8,
+          "order": 1,
+          "widgets": [
+            {
+              "type": "ui_template",
+              "name": "3D Visualization",
+              "order": 1,
+              "width": 8,
+              "height": 8
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "twin_controls",
+          "name": "Controls & Parameters",
+          "width": 4,
+          "height": 8,
+          "order": 2,
+          "widgets": [
+            {
+              "type": "ui_slider",
+              "name": "Time Control",
+              "order": 1,
+              "width": 4,
+              "height": 1
+            },
+            {
+              "type": "ui_dropdown",
+              "name": "Select View",
+              "order": 2,
+              "width": 4,
+              "height": 1
+            },
+            {
+              "type": "ui_switch",
+              "name": "Show Sensors",
+              "order": 3,
+              "width": 4,
+              "height": 1
+            },
+            {
+              "type": "ui_form",
+              "name": "Twin Parameters",
+              "order": 4,
+              "width": 4,
+              "height": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "historical",
+      "name": "Historical Data",
+      "layout": "grid",
+      "content": [
+        {
+          "type": "group",
+          "id": "history_filters",
+          "name": "Data Filters",
+          "width": 12,
+          "height": 1,
+          "order": 1,
+          "widgets": [
+            {
+              "type": "ui_dropdown",
+              "name": "Select Plant",
+              "order": 1,
+              "width": 3,
+              "height": 1
+            },
+            {
+              "type": "ui_date_picker",
+              "name": "Start Date",
+              "order": 2,
+              "width": 3,
+              "height": 1
+            },
+            {
+              "type": "ui_date_picker",
+              "name": "End Date",
+              "order": 3,
+              "width": 3,
+              "height": 1
+            },
+            {
+              "type": "ui_button",
+              "name": "Load Data",
+              "order": 4,
+              "width": 3,
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "history_charts",
+          "name": "Historical Charts",
+          "width": 12,
+          "height": 7,
+          "order": 2,
+          "widgets": [
+            {
+              "type": "ui_chart",
+              "name": "Temperature History",
+              "order": 1,
+              "width": 6,
+              "height": 3
+            },
+            {
+              "type": "ui_chart",
+              "name": "Humidity History",
+              "order": 2,
+              "width": 6,
+              "height": 3
+            },
+            {
+              "type": "ui_chart",
+              "name": "Light Intensity History",
+              "order": 3,
+              "width": 6,
+              "height": 3
+            },
+            {
+              "type": "ui_chart",
+              "name": "Soil Moisture History",
+              "order": 4,
+              "width": 6,
+              "height": 3
+            },
+            {
+              "type": "ui_button",
+              "name": "Export Data",
+              "order": 5,
+              "width": 3,
+              "height": 1
+            },
+            {
+              "type": "ui_button",
+              "name": "Generate Report",
+              "order": 6,
+              "width": 3,
+              "height": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "name": "Settings",
+      "layout": "grid",
+      "content": [
+        {
+          "type": "group",
+          "id": "plant_settings",
+          "name": "Plant Configuration",
+          "width": 6,
+          "height": 6,
+          "order": 1,
+          "widgets": [
+            {
+              "type": "ui_form",
+              "name": "Plant Information",
+              "order": 1,
+              "width": 6,
+              "height": 3
+            },
+            {
+              "type": "ui_form",
+              "name": "Threshold Settings",
+              "order": 2,
+              "width": 6,
+              "height": 3
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "notification_settings",
+          "name": "Notification Settings",
+          "width": 6,
+          "height": 6,
+          "order": 2,
+          "widgets": [
+            {
+              "type": "ui_form",
+              "name": "Email Settings",
+              "order": 1,
+              "width": 6,
+              "height": 2
+            },
+            {
+              "type": "ui_form",
+              "name": "Telegram Settings",
+              "order": 2,
+              "width": 6,
+              "height": 2
+            },
+            {
+              "type": "ui_switch",
+              "name": "Enable Critical Alerts",
+              "order": 3,
+              "width": 3,
+              "height": 1
+            },
+            {
+              "type": "ui_switch",
+              "name": "Enable Warning Alerts",
+              "order": 4,
+              "width": 3,
+              "height": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

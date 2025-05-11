@@ -1,0 +1,125 @@
+
+  "$schema": "http://json-schema.org/schema#",
+  "id": "https://smart-plant-twin/sensor-models/humidity.json",
+  "title": "Humidity Sensor Model",
+  "description": "Data model for humidity sensors in the smart plant digital twin",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "location",
+    "value",
+    "unit"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the humidity sensor"
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of sensor",
+      "enum": ["HumiditySensor"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the humidity sensor"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the humidity sensor"
+    },
+    "location": {
+      "type": "string",
+      "description": "Location of the sensor relative to the plant (e.g., 'air', 'container')"
+    },
+    "plantId": {
+      "type": "string",
+      "description": "ID of the plant this sensor is associated with"
+    },
+    "value": {
+      "type": "number",
+      "description": "The current humidity reading value",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement",
+      "enum": ["P1", "GM3"],
+      "default": "P1"
+    },
+    "accuracy": {
+      "type": "number",
+      "description": "Accuracy of the sensor readings (±)",
+      "minimum": 0
+    },
+    "resolution": {
+      "type": "number",
+      "description": "Resolution of the sensor readings",
+      "minimum": 0
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp of when the reading was taken"
+    },
+    "batteryLevel": {
+      "type": "number",
+      "description": "Battery level percentage of the sensor (for wireless sensors)",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "status": {
+      "type": "string",
+      "description": "Status of the sensor",
+      "enum": ["active", "inactive", "maintenance", "error"],
+      "default": "active"
+    },
+    "dewPoint": {
+      "type": "number",
+      "description": "Calculated dew point in Celsius (if supported by the sensor)"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for the sensor",
+      "properties": {
+        "manufacturer": {
+          "type": "string",
+          "description": "Manufacturer of the sensor"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model number of the sensor"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the sensor"
+        },
+        "firmware": {
+          "type": "string",
+          "description": "Firmware version of the sensor"
+        },
+        "calibrationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Last calibration date of the sensor"
+        },
+        "installationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Installation date of the sensor"
+        },
+        "maintenanceInterval": {
+          "type": "number",
+          "description": "Recommended maintenance interval in days"
+        },
+        "sensorType": {
+          "type": "string",
+          "description": "Type of humidity sensor technology",
+          "enum": ["capacitive", "resistive", "thermal"]
+        }
+      }
+    }
+  }
+}

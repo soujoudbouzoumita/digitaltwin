@@ -1,0 +1,114 @@
+
+  "$schema": "http://json-schema.org/schema#",
+  "id": "https://smart-plant-twin/sensor-models/temperature.json",
+  "title": "Temperature Sensor Model",
+  "description": "Data model for temperature sensors in the smart plant digital twin",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "location",
+    "value",
+    "unit"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the temperature sensor"
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of sensor",
+      "enum": ["TemperatureSensor"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the temperature sensor"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the temperature sensor"
+    },
+    "location": {
+      "type": "string",
+      "description": "Location of the sensor relative to the plant (e.g., 'soil', 'air')"
+    },
+    "plantId": {
+      "type": "string",
+      "description": "ID of the plant this sensor is associated with"
+    },
+    "value": {
+      "type": "number",
+      "description": "The current temperature reading value"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement",
+      "enum": ["CEL", "FAH", "K"],
+      "default": "CEL"
+    },
+    "accuracy": {
+      "type": "number",
+      "description": "Accuracy of the sensor readings (±)",
+      "minimum": 0
+    },
+    "resolution": {
+      "type": "number",
+      "description": "Resolution of the sensor readings",
+      "minimum": 0
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp of when the reading was taken"
+    },
+    "batteryLevel": {
+      "type": "number",
+      "description": "Battery level percentage of the sensor (for wireless sensors)",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "status": {
+      "type": "string",
+      "description": "Status of the sensor",
+      "enum": ["active", "inactive", "maintenance", "error"],
+      "default": "active"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for the sensor",
+      "properties": {
+        "manufacturer": {
+          "type": "string",
+          "description": "Manufacturer of the sensor"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model number of the sensor"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the sensor"
+        },
+        "firmware": {
+          "type": "string",
+          "description": "Firmware version of the sensor"
+        },
+        "calibrationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Last calibration date of the sensor"
+        },
+        "installationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Installation date of the sensor"
+        },
+        "maintenanceInterval": {
+          "type": "number",
+          "description": "Recommended maintenance interval in days"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,346 @@
+
+    {
+        "id": "notification-flows",
+        "type": "tab",
+        "label": "Notifications & Alerts",
+        "disabled": false,
+        "info": "Flows for handling alerts and sending notifications"
+    },
+    {
+        "id": "threshold-monitor",
+        "type": "function",
+        "z": "notification-flows",
+        "name": "Check Thresholds",
+        "func": "// Get the input data from the message\nconst entity = msg.payload;\nconst thresholds = flow.get('thresholds') || {};\n\n// Extract plant type/species\nconst plantType = entity.species?.value || 'default';\n\n// Initialize results object\nlet alerts = [];\n\n// Check if we have thresholds for this plant type, otherwise use default\nconst plantThresholds = thresholds.plants[plantType] || thresholds.plants.default;\n\n// Check temperature thresholds if temperature exists\nif (entity.temperature && plantThresholds.temperature) {\n    const temp = parseFloat(entity.temperature.value);\n    const tempThresholds = plantThresholds.temperature;\n    \n    if (temp < tempThresholds.criticalMin) {\n        alerts.push({\n            type: 'temperature',\n            severity: 'critical',\n            message: `Critical low temperature detected: ${temp}${tempThresholds.unit}`,\n            value: temp,\n            threshold: tempThresholds.criticalMin,\n            unit: tempThresholds.unit\n        });\n    } else if (temp < tempThresholds.min) {\n        alerts.push({\n            type: 'temperature',\n            severity: 'warning',\n            message: `Low temperature detected: ${temp}${tempThresholds.unit}`,\n            value: temp,\n            threshold: tempThresholds.min,\n            unit: tempThresholds.unit\n        });\n    } else if (temp > tempThresholds.criticalMax) {\n        alerts.push({\n            type: 'temperature',\n            severity: 'critical',\n            message: `Critical high temperature detected: ${temp}${tempThresholds.unit}`,\n            value: temp,\n            threshold: tempThresholds.criticalMax,\n            unit: tempThresholds.unit\n        });\n    } else if (temp > tempThresholds.max) {\n        alerts.push({\n            type: 'temperature',\n            severity: 'warning',\n            message: `High temperature detected: ${temp}${tempThresholds.unit}`,\n            value: temp,\n            threshold: tempThresholds.max,\n            unit: tempThresholds.unit\n        });\n    }\n}\n\n// Check humidity thresholds if humidity exists\nif (entity.humidity && plantThresholds.humidity) {\n    const humidity = parseFloat(entity.humidity.value);\n    const humidityThresholds = plantThresholds.humidity;\n    \n    if (humidity < humidityThresholds.criticalMin) {\n        alerts.push({\n            type: 'humidity',\n            severity: 'critical',\n            message: `Critical low humidity detected: ${humidity}${humidityThresholds.unit}`,\n            value: humidity,\n            threshold: humidityThresholds.criticalMin,\n            unit: humidityThresholds.unit\n        });\n    } else if (humidity < humidityThresholds.min) {\n        alerts.push({\n            type: 'humidity',\n            severity: 'warning',\n            message: `Low humidity detected: ${humidity}${humidityThresholds.unit}`,\n            value: humidity,\n            threshold: humidityThresholds.min,\n            unit: humidityThresholds.unit\n        });\n    } else if (humidity > humidityThresholds.criticalMax) {\n        alerts.push({\n            type: 'humidity',\n            severity: 'critical',\n            message: `Critical high humidity detected: ${humidity}${humidityThresholds.unit}`,\n            value: humidity,\n            threshold: humidityThresholds.criticalMax,\n            unit: humidityThresholds.unit\n        });\n    } else if (humidity > humidityThresholds.max) {\n        alerts.push({\n            type: 'humidity',\n            severity: 'warning',\n            message: `High humidity detected: ${humidity}${humidityThresholds.unit}`,\n            value: humidity,\n            threshold: humidityThresholds.max,\n            unit: humidityThresholds.unit\n        });\n    }\n}\n\n// Check light thresholds if light exists\nif (entity.lightIntensity && plantThresholds.light) {\n    const light = parseFloat(entity.lightIntensity.value);\n    const lightThresholds = plantThresholds.light;\n    \n    if (light < lightThresholds.criticalMin) {\n        alerts.push({\n            type: 'light',\n            severity: 'critical',\n            message: `Critical low light detected: ${light}${lightThresholds.unit}`,\n            value: light,\n            threshold: lightThresholds.criticalMin,\n            unit: lightThresholds.unit\n        });\n    } else if (light < lightThresholds.min) {\n        alerts.push({\n            type: 'light',\n            severity: 'warning',\n            message: `Low light detected: ${light}${lightThresholds.unit}`,\n            value: light,\n            threshold: lightThresholds.min,\n            unit: lightThresholds.unit\n        });\n    } else if (light > lightThresholds.criticalMax) {\n        alerts.push({\n            type: 'light',\n            severity: 'critical',\n            message: `Critical high light detected: ${light}${lightThresholds.unit}`,\n            value: light,\n            threshold: lightThresholds.criticalMax,\n            unit: lightThresholds.unit\n        });\n    } else if (light > lightThresholds.max) {\n        alerts.push({\n            type: 'light',\n            severity: 'warning',\n            message: `High light detected: ${light}${lightThresholds.unit}`,\n            value: light,\n            threshold: lightThresholds.max,\n            unit: lightThresholds.unit\n        });\n    }\n}\n\n// Check soil moisture thresholds if soil moisture exists\nif (entity.soilMoisture && plantThresholds.soilMoisture) {\n    const moisture = parseFloat(entity.soilMoisture.value);\n    const moistureThresholds = plantThresholds.soilMoisture;\n    \n    if (moisture < moistureThresholds.criticalMin) {\n        alerts.push({\n            type: 'soilMoisture',\n            severity: 'critical',\n            message: `Critical low soil moisture detected: ${moisture}${moistureThresholds.unit}`,\n            value: moisture,\n            threshold: moistureThresholds.criticalMin,\n            unit: moistureThresholds.unit\n        });\n    } else if (moisture < moistureThresholds.min) {\n        alerts.push({\n            type: 'soilMoisture',\n            severity: 'warning',\n            message: `Low soil moisture detected: ${moisture}${moistureThresholds.unit}`,\n            value: moisture,\n            threshold: moistureThresholds.min,\n            unit: moistureThresholds.unit\n        });\n    } else if (moisture > moistureThresholds.criticalMax) {\n        alerts.push({\n            type: 'soilMoisture',\n            severity: 'critical',\n            message: `Critical high soil moisture detected: ${moisture}${moistureThresholds.unit}`,\n            value: moisture,\n            threshold: moistureThresholds.criticalMax,\n            unit: moistureThresholds.unit\n        });\n    } else if (moisture > moistureThresholds.max) {\n        alerts.push({\n            type: 'soilMoisture',\n            severity: 'warning',\n            message: `High soil moisture detected: ${moisture}${moistureThresholds.unit}`,\n            value: moisture,\n            threshold: moistureThresholds.max,\n            unit: moistureThresholds.unit\n        });\n    }\n}\n\n// If there are alerts, send them, otherwise stop the flow\nif (alerts.length > 0) {\n    msg.payload = {\n        id: entity.id,\n        name: entity.name?.value || entity.id,\n        timestamp: new Date().toISOString(),\n        alerts: alerts\n    };\n    return msg;\n} else {\n    return null; // No alerts, so stop the flow here\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 120,
+        "wires": [
+            [
+                "alert-filter"
+            ]
+        ]
+    },
+    {
+        "id": "alert-filter",
+        "type": "function",
+        "z": "notification-flows",
+        "name": "Filter & Route Alerts",
+        "func": "// Get the alerts from the message\nconst alertData = msg.payload;\n\n// Check if there are critical alerts\nconst criticalAlerts = alertData.alerts.filter(alert => alert.severity === 'critical');\nconst warningAlerts = alertData.alerts.filter(alert => alert.severity === 'warning');\n\n// Prepare outputs\nconst outputs = [];\n\n// Output 1: Critical alerts (for immediate notification)\nif (criticalAlerts.length > 0) {\n    outputs[0] = {\n        payload: {\n            ...alertData,\n            alerts: criticalAlerts,\n            severity: 'critical'\n        }\n    };\n} else {\n    outputs[0] = null;\n}\n\n// Output 2: Warning alerts (for dashboard and logging)\nif (warningAlerts.length > 0) {\n    outputs[1] = {\n        payload: {\n            ...alertData,\n            alerts: warningAlerts,\n            severity: 'warning'\n        }\n    };\n} else {\n    outputs[1] = null;\n}\n\n// Output 3: All alerts (for dashboard and history)\noutputs[2] = {\n    payload: alertData\n};\n\nreturn outputs;\n",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 120,
+        "wires": [
+            [
+                "format-critical-notification"
+            ],
+            [
+                "format-warning-notification"
+            ],
+            [
+                "store-alert-history",
+                "update-dashboard-alerts"
+            ]
+        ]
+    },
+    {
+        "id": "format-critical-notification",
+        "type": "function",
+        "z": "notification-flows",
+        "name": "Format Critical Notification",
+        "func": "// Skip if no message\nif (!msg.payload) return null;\n\n// Extract alert data\nconst data = msg.payload;\nconst plantName = data.name;\nconst alerts = data.alerts;\n\n// Create notification message\nlet message = `🚨 CRITICAL ALERT for ${plantName}:\\n`;\n\n// Add each alert to the message\nalerts.forEach(alert => {\n    message += `- ${alert.message}\\n`;\n});\n\n// Add timestamp\nconst timestamp = new Date().toLocaleString();\nmessage += `\\nTime: ${timestamp}`;\n\n// Create the message object\nmsg.payload = message;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 80,
+        "wires": [
+            [
+                "email-notification",
+                "telegram-notification"
+            ]
+        ]
+    },
+    {
+        "id": "format-warning-notification",
+        "type": "function",
+        "z": "notification-flows",
+        "name": "Format Warning Notification",
+        "func": "// Skip if no message\nif (!msg.payload) return null;\n\n// Extract alert data\nconst data = msg.payload;\nconst plantName = data.name;\nconst alerts = data.alerts;\n\n// Create notification message\nlet message = `⚠️ WARNING for ${plantName}:\\n`;\n\n// Add each alert to the message\nalerts.forEach(alert => {\n    message += `- ${alert.message}\\n`;\n});\n\n// Add timestamp\nconst timestamp = new Date().toLocaleString();\nmessage += `\\nTime: ${timestamp}`;\n\n// Create the message object\nmsg.payload = message;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 140,
+        "wires": [
+            [
+                "dashboard-notification"
+            ]
+        ]
+    },
+    {
+        "id": "store-alert-history",
+        "type": "function",
+        "z": "notification-flows",
+        "name": "Store Alert History",
+        "func": "// Format alert for database storage\nconst alertData = msg.payload;\n\n// Create document for MongoDB\nconst document = {\n    plantId: alertData.id,\n    plantName: alertData.name,\n    timestamp: new Date(),\n    alerts: alertData.alerts.map(alert => ({\n        type: alert.type,\n        severity: alert.severity,\n        message: alert.message,\n        value: alert.value,\n        threshold: alert.threshold,\n        unit: alert.unit\n    }))\n};\n\n// Set payload to the document\nmsg.payload = document;\n\n// Set MongoDB collection\nmsg.collection = 'alert_history';\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 200,
+        "wires": [
+            [
+                "mongodb-storage"
+            ]
+        ]
+    },
+    {
+        "id": "update-dashboard-alerts",
+        "type": "function",
+        "z": "notification-flows",
+        "name": "Update Dashboard",
+        "func": "// Forward alerts to dashboard\nconst alertData = msg.payload;\n\n// Format for dashboard\nconst dashboardUpdate = {\n    plantId: alertData.id,\n    plantName: alertData.name,\n    timestamp: new Date().toISOString(),\n    alerts: alertData.alerts.map(alert => ({\n        type: alert.type,\n        severity: alert.severity,\n        message: alert.message\n    }))\n};\n\n// Set topic for the dashboard\nmsg.topic = \"plant/alerts\";\nmsg.payload = dashboardUpdate;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 260,
+        "wires": [
+            [
+                "dashboard-alerts"
+            ]
+        ]
+    },
+    {
+        "id": "email-notification",
+        "type": "e-mail",
+        "z": "notification-flows",
+        "server": "{{SMTP_SERVER}}",
+        "port": "{{SMTP_PORT}}",
+        "secure": true,
+        "tls": true,
+        "name": "Email Alert",
+        "dname": "Send Email Alert",
+        "x": 1000,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "telegram-notification",
+        "type": "telegram sender",
+        "z": "notification-flows",
+        "name": "Telegram Alert",
+        "bot": "",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1010,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dashboard-notification",
+        "type": "ui_notification",
+        "z": "notification-flows",
+        "name": "Dashboard Notification",
+        "group": "plant_alerts",
+        "x": 1020,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "mongodb-storage",
+        "type": "mongodb out",
+        "z": "notification-flows",
+        "mongodb": "mongodb-connection",
+        "name": "Store in MongoDB",
+        "collection": "alert_history",
+        "payonly": true,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 1010,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "dashboard-alerts",
+        "type": "ui_template",
+        "z": "notification-flows",
+        "group": "plant_status",
+        "name": "Alerts Dashboard",
+        "order": 1,
+        "width": 10,
+        "height": 8,
+        "format": "<div class=\"plant-alerts\">\n    <h3>Plant Alerts</h3>\n    <div class=\"alert-container\" ng-repeat=\"alert in msg.payload.alerts\">\n        <div class=\"alert\" ng-class=\"{'critical': alert.severity === 'critical', 'warning': alert.severity === 'warning'}\">\n            <div class=\"alert-icon\">\n                <i ng-if=\"alert.severity === 'critical'\" class=\"fa fa-exclamation-triangle\"></i>\n                <i ng-if=\"alert.severity === 'warning'\" class=\"fa fa-exclamation-circle\"></i>\n            </div>\n            <div class=\"alert-content\">\n                <div class=\"alert-title\">{{alert.type}}</div>\n                <div class=\"alert-message\">{{alert.message}}</div>\n            </div>\n        </div>\n    </div>\n    <div class=\"timestamp\">Last updated: {{msg.payload.timestamp | date:'medium'}}</div>\n</div>\n\n<style>\n.plant-alerts {\n    font-family: 'Arial', sans-serif;\n    padding: 10px;\n    background-color: #f5f5f5;\n    border-radius: 5px;\n}\n\n.alert-container {\n    margin-bottom: 10px;\n}\n\n.alert {\n    display: flex;\n    padding: 10px;\n    border-radius: 4px;\n    background-color: #fff;\n    box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n}\n\n.alert.critical {\n    border-left: 4px solid #d9534f;\n}\n\n.alert.warning {\n    border-left: 4px solid #f0ad4e;\n}\n\n.alert-icon {\n    margin-right: 15px;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    font-size: 20px;\n}\n\n.alert.critical .alert-icon {\n    color: #d9534f;\n}\n\n.alert.warning .alert-icon {\n    color: #f0ad4e;\n}\n\n.alert-content {\n    flex: 1;\n}\n\n.alert-title {\n    font-weight: bold;\n    text-transform: capitalize;\n}\n\n.timestamp {\n    font-size: 12px;\n    color: #777;\n    text-align: right;\n    margin-top: 10px;\n}\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1010,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "load-thresholds",
+        "type": "function",
+        "z": "notification-flows",
+        "name": "Load Thresholds",
+        "func": "// This function loads the thresholds from the thresholds.json file\n// and stores them in flow context for use by the threshold monitor\nconst fs = global.get('fs');\nconst path = global.get('path');\n\ntry {\n    // Read thresholds file\n    const thresholdsPath = path.join(global.get('projectRoot'), 'models', 'thresholds.json');\n    const thresholdsContent = fs.readFileSync(thresholdsPath, 'utf8');\n    const thresholds = JSON.parse(thresholdsContent);\n    \n    // Store in flow context\n    flow.set('thresholds', thresholds);\n    \n    // Log success\n    node.status({fill:\"green\", shape:\"dot\", text:\"Thresholds loaded\"});\n    \n    // Return success message\n    msg.payload = {\n        status: 'success',\n        message: 'Thresholds loaded successfully',\n        timestamp: new Date().toISOString()\n    };\n    return msg;\n} catch (error) {\n    // Log error\n    node.status({fill:\"red\", shape:\"ring\", text:\"Error loading thresholds\"});\n    node.error(\"Failed to load thresholds: \" + error.message);\n    \n    // Return error message\n    msg.payload = {\n        status: 'error',\n        message: 'Failed to load thresholds: ' + error.message,\n        timestamp: new Date().toISOString()\n    };\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nnode.status({fill:\"blue\", shape:\"ring\", text:\"Initializing...\"});\n",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "inject-load-thresholds",
+        "type": "inject",
+        "z": "notification-flows",
+        "name": "Load on Deploy",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.5",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "load-thresholds"
+            ]
+        ]
+    },
+    {
+        "id": "orion-subscription",
+        "type": "http in",
+        "z": "notification-flows",
+        "name": "Orion Subscription Endpoint",
+        "url": "/notifications/plant-alerts",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 160,
+        "wires": [
+            [
+                "threshold-monitor"
+            ]
+        ]
+    },
+    {
+        "id": "create-subscription",
+        "type": "http request",
+        "z": "notification-flows",
+        "name": "Create Orion Subscription",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://orion:1026/v2/subscriptions",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 500,
+        "y": 320,
+        "wires": [
+            [
+                "subscription-response"
+            ]
+        ]
+    },
+    {
+        "id": "prepare-subscription",
+        "type": "function",
+        "z": "notification-flows",
+        "name": "Prepare Subscription",
+        "func": "// Create subscription request for Orion\nconst hostUrl = global.get('hostUrl') || 'http://node-red:1880';\n\nmsg.payload = {\n    \"description\": \"Subscription for plant monitoring alerts\",\n    \"subject\": {\n        \"entities\": [\n            {\n                \"idPattern\": \"Plant:.*\",\n                \"type\": \"Plant\"\n            }\n        ],\n        \"condition\": {\n            \"attrs\": [\n                \"temperature\",\n                \"humidity\",\n                \"lightIntensity\",\n                \"soilMoisture\"\n            ]\n        }\n    },\n    \"notification\": {\n        \"http\": {\n            \"url\": `${hostUrl}/notifications/plant-alerts`\n        },\n        \"attrs\": [\n            \"id\",\n            \"name\",\n            \"species\",\n            \"temperature\",\n            \"humidity\",\n            \"lightIntensity\",\n            \"soilMoisture\"\n        ]\n    }\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 240,
+        "y": 320,
+        "wires": [
+            [
+                "create-subscription"
+            ]
+        ]
+    },
+    {
+        "id": "subscription-response",
+        "type": "debug",
+        "z": "notification-flows",
+        "name": "Subscription Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "subscription-trigger",
+        "type": "inject",
+        "z": "notification-flows",
+        "name": "Create Subscription on Deploy",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "2",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 380,
+        "wires": [
+            [
+                "prepare-subscription"
+            ]
+        ]
+    }
+]

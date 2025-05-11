@@ -1,0 +1,150 @@
+
+  "$schema": "http://json-schema.org/schema#",
+  "id": "https://smart-plant-twin/sensor-models/light.json",
+  "title": "Light Sensor Model",
+  "description": "Data model for light intensity sensors in the smart plant digital twin",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "location",
+    "value",
+    "unit"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the light sensor"
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of sensor",
+      "enum": ["LightSensor"]
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the light sensor"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the light sensor"
+    },
+    "location": {
+      "type": "string",
+      "description": "Location of the sensor relative to the plant (e.g., 'above', 'side')"
+    },
+    "plantId": {
+      "type": "string",
+      "description": "ID of the plant this sensor is associated with"
+    },
+    "value": {
+      "type": "number",
+      "description": "The current light intensity reading value",
+      "minimum": 0
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement",
+      "enum": ["LUX", "FC", "MOL", "PPFD"],
+      "default": "LUX"
+    },
+    "spectrum": {
+      "type": "object",
+      "description": "Light spectrum breakdown (if supported by the sensor)",
+      "properties": {
+        "red": {
+          "type": "number",
+          "description": "Red spectrum component (620-750nm)"
+        },
+        "green": {
+          "type": "number",
+          "description": "Green spectrum component (495-570nm)"
+        },
+        "blue": {
+          "type": "number",
+          "description": "Blue spectrum component (450-495nm)"
+        },
+        "farRed": {
+          "type": "number",
+          "description": "Far-red spectrum component (700-850nm)"
+        },
+        "uv": {
+          "type": "number",
+          "description": "UV spectrum component (10-400nm)"
+        }
+      }
+    },
+    "accuracy": {
+      "type": "number",
+      "description": "Accuracy of the sensor readings (±)",
+      "minimum": 0
+    },
+    "resolution": {
+      "type": "number",
+      "description": "Resolution of the sensor readings",
+      "minimum": 0
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp of when the reading was taken"
+    },
+    "batteryLevel": {
+      "type": "number",
+      "description": "Battery level percentage of the sensor (for wireless sensors)",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "status": {
+      "type": "string",
+      "description": "Status of the sensor",
+      "enum": ["active", "inactive", "maintenance", "error"],
+      "default": "active"
+    },
+    "dailyLightIntegral": {
+      "type": "number",
+      "description": "Daily Light Integral (DLI) in mol/m²/day if calculated by the sensor"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for the sensor",
+      "properties": {
+        "manufacturer": {
+          "type": "string",
+          "description": "Manufacturer of the sensor"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model number of the sensor"
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the sensor"
+        },
+        "firmware": {
+          "type": "string",
+          "description": "Firmware version of the sensor"
+        },
+        "calibrationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Last calibration date of the sensor"
+        },
+        "installationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Installation date of the sensor"
+        },
+        "maintenanceInterval": {
+          "type": "number",
+          "description": "Recommended maintenance interval in days"
+        },
+        "sensorType": {
+          "type": "string",
+          "description": "Type of light sensor technology",
+          "enum": ["photodiode", "photoresistor", "phototransistor", "quantum", "spectral"]
+        }
+      }
+    }
+  }
+}
