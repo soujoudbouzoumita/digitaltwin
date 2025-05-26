@@ -1,0 +1,217 @@
+backup:
+  version: "1.0"
+  enabled: true
+  
+  # MongoDB Database Backups
+  mongodb:
+    enabled: true
+    host: "mongodb"
+    port: 27017
+    database: "smartplant"
+    
+    # Backup schedules
+    schedules:
+      # Full database backup
+      full:
+        frequency: "daily"
+        time: "02:00"
+        retention: "30 days"
+        location: "/data/backups/mongodb/full"
+        compression: true
+        
+      # Incremental backup
+      incremental:
+        frequency: "hourly"
+        retention: "7 days"
+        location: "/data/backups/mongodb/incremental"
+        compression: true
+        
+    # Collections to backup
+    collections:
+      - name: "realtime_data"
+        priority: "high"
+        backup_type: "incremental"
+        
+      - name: "hourly_aggregates"
+        priority: "medium"
+        backup_type: "daily"
+        
+      - name: "daily_aggregates"
+        priority: "medium"
+        backup_type: "daily"
+        
+      - name: "plant_profiles"
+        priority: "critical"
+        backup_type: "full"
+        
+      - name: "alerts_history"
+        priority: "low"
+        backup_type: "weekly"
+        
+      - name: "system_logs"
+        priority: "low"
+        backup_type: "weekly"
+
+  # FIWARE Orion Context Data Backup
+  orion:
+    enabled: true
+    host: "orion"
+    port: 1026
+    
+    schedules:
+      entities:
+        frequency: "daily"
+        time: "03:00"
+        retention: "14 days"
+        location: "/data/backups/orion/entities"
+        format: "json"
+        
+      subscriptions:
+        frequency: "weekly"
+        time: "04:00"
+        retention: "30 days"
+        location: "/data/backups/orion/subscriptions"
+        format: "json"
+
+  # Node-RED Flow Backup
+  nodered:
+    enabled: true
+    flows_location: "/data/node-red/flows"
+    
+    schedules:
+      flows:
+        frequency: "daily"
+        time: "01:30"
+        retention: "14 days"
+        location: "/data/backups/nodered/flows"
+        
+      settings:
+        frequency: "weekly"
+        time: "01:30"
+        retention: "30 days"
+        location: "/data/backups/nodered/settings"
+
+  # Configuration Files Backup
+  config:
+    enabled: true
+    
+    schedules:
+      system_config:
+        frequency: "weekly"
+        time: "05:00"
+        retention: "60 days"
+        location: "/data/backups/config"
+        
+    # Files to backup
+    files:
+      - "/app/models/*.json"
+      - "/app/services/*/config.json"
+      - "/app/.env"
+      - "/app/docker-compose.yml"
+      - "/data/historical/data-retention-policy.json"
+
+# Storage Configuration
+storage:
+  # Local storage settings
+  local:
+    enabled: true
+    base_path: "/data/backups"
+    max_size: "10GB"
+    cleanup_policy: "size_based"
+    
+  # Remote storage (optional)
+  remote:
+    enabled: false
+    type: "s3"  # s3, azure, gcs
+    bucket: "smart-plant-backups"
+    region: "eu-west-1"
+    encryption: true
+    
+    # Uncomment and configure if using remote storage
+    # credentials:
+    #   access_key: "${AWS_ACCESS_KEY_ID}"
+    #   secret_key: "${AWS_SECRET_ACCESS_KEY}"
+
+# Restoration Settings
+restore:
+  enabled: true
+  
+  # Quick restore points
+  quick_restore:
+    enabled: true
+    max_restore_points: 5
+    retention: "7 days"
+    
+  # Point-in-time recovery
+  point_in_time:
+    enabled: true
+    granularity: "1 hour"
+    max_recovery_window: "24 hours"
+
+# Monitoring and Alerting
+monitoring:
+  enabled: true
+  
+  # Backup success monitoring
+  success_monitoring:
+    enabled: true
+    alert_on_failure: true
+    max_retry_attempts: 3
+    
+  # Storage monitoring
+  storage_monitoring:
+    enabled: true
+    alert_threshold: "80%"
+    check_interval: "1 hour"
+    
+  # Notification settings
+  notifications:
+    email:
+      enabled: false
+      # smtp_server: "smtp.example.com"
+      # recipients: ["admin@example.com"]
+      
+    webhook:
+      enabled: false
+      # url: "https://hooks.slack.com/services/..."
+      
+    log:
+      enabled: true
+      level: "info"
+      file: "/var/log/backup.log"
+
+# Verification Settings
+verification:
+  enabled: true
+  
+  # Backup integrity checks
+  integrity_check:
+    enabled: true
+    frequency: "daily"
+    method: "checksum"
+    
+  # Restore testing
+  restore_test:
+    enabled: true
+    frequency: "weekly"
+    test_environment: "staging"
+    
+# Security Settings
+security:
+  # Encryption settings
+  encryption:
+    enabled: true
+    method: "AES-256"
+    key_rotation: "monthly"
+    
+  # Access control
+  access_control:
+    enabled: true
+    require_authentication: true
+    allowed_users: ["backup_admin", "system_admin"]
+    
+  # Audit logging
+  audit:
+    enabled: true
+    log_location: "/var/log/backup-audit.log"
+    retain_logs: "90 days"
