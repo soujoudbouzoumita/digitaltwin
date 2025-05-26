@@ -1,76 +1,103 @@
-🌱 Smart Plant Digital Twin - Guide d'installation
 
-Ce guide vous aidera à installer et configurer le jumeau numérique de plante (Smart Plant Digital Twin).
+# Smart Plant Digital Twin - Setup Guide
 
-✅ Prérequis
+Ce guide vous aidera à installer et configurer le système de jumeau numérique de plantes (Smart Plant Digital Twin).
 
-Avant de commencer, assurez-vous d’avoir installé :
+## Prérequis
 
-Docker & Docker Compose (≥ 1.27.0)
+Avant de commencer, assurez-vous d'avoir installé les logiciels suivants :
+- Docker et Docker Compose (version 1.27.0 ou supérieure)
+- Git pour cloner le dépôt
+- Un éditeur de texte comme Visual Studio Code
 
-Git
+## Installation
 
-Un éditeur de texte (ex: Visual Studio Code)
-Installation
+### Cloner le dépôt
 
-1. Cloner le dépôt
+```bash
 git clone https://github.com/soujoudbouzoumita/smart-plant-twin.git
 cd smart-plant-twin
-2. Configuration de l’environnement
+```
+
+### Configuration de l'environnement
+
+Copiez le fichier d'environnement d'exemple :
+
+```bash
 cp .env.example .env
-Copiez le fichier d'exemple .env :
-MongoDB
+```
+
+Ouvrez le fichier `.env` et configurez les variables d'environnement selon vos besoins :
+
+```env
+# MongoDB Credentials
 MONGO_USER=root
-MONGO_PASSWORD=mot_de_passe_sécurisé
-Orion Context Broker
+MONGO_PASSWORD=votre_mot_de_passe_sécurisé
+
+# Orion Context Broker
 ORION_PORT=1026
-Node-RED
+
+# Node-RED
 NODE_RED_PORT=1880
-Projet
+
+# Project Configuration
 PROJECT_NAME=smart-plant-twin
-TIMEZONE=Afrique/Tunisie
-Services de notification (optionnel)
+TIMEZONE=Europe/Paris
+
+# Optional: Notification Services
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 SMTP_SERVER=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your_email@gmail.com
 SMTP_PASSWORD=your_email_password
-🚀 Lancer les services
+```
 
-Utilisez Docker Compose pour démarrer les conteneurs :
+### Lancer les services
+
+Utilisez Docker Compose pour démarrer tous les services :
+
+```bash
 docker-compose up -d
-🧪 Vérifier l’installation
+```
 
-Vérifiez que tout fonctionne :
+Cette commande va télécharger les images nécessaires et démarrer les conteneurs pour MongoDB, Orion Context Broker et Node-RED.
+
+### Vérifier l'installation
+
+Vérifiez que tous les services sont en cours d'exécution :
+
+```bash
 docker-compose ps
-Tous les services devraient avoir le statut Up.
+```
 
-🔗 Accès aux interfaces
+Vous devriez voir tous les services avec le statut "Up".
 
-🏪 Node-RED Dashboard : http://localhost:1880/ui
+### Accès aux interfaces
 
-✏️ Node-RED Editor : http://localhost:1880
+Une fois les services démarrés, vous pouvez accéder aux différentes interfaces :
 
-📦 Orion Context Broker : http://localhost:1026/version
+- Node-RED Dashboard : http://localhost:1880/ui
+- Node-RED Editor : http://localhost:1880
+- Orion Context Broker : http://localhost:1026/version
 
-⚙️ Configuration initiale
+## Configuration initiale
 
-📁 Modèles de données
+### Configuration des modèles de données
 
-Des modèles prédéfinis se trouvent dans le dossier models/. Vous pouvez les adapter.
+Le système utilise des modèles de données prédéfinis pour les plantes et les capteurs. Ces modèles sont déjà configurés, mais vous pouvez les personnaliser selon vos besoins en modifiant les fichiers JSON dans le dossier `models/`.
 
-🔔 Seuils d’alerte
+### Configuration des seuils d'alerte
 
-Définis dans models/thresholds.json. Adaptez-les selon l’espèce végétale surveillée.
+Les seuils d'alerte pour les différents paramètres (température, humidité, luminosité, etc.) sont définis dans le fichier `models/thresholds.json`. Modifiez ce fichier pour ajuster les seuils selon les espèces de plantes que vous surveillez.
 
-➕ Ajout de plantes et capteurs
+### Ajout de plantes et de capteurs
 
-🌿 Ajouter une plante
+#### Création d'une nouvelle entité de plante
 
-Exemple d’appel curl :
-curl -X POST http://localhost:1026/v2/entities \
--H 'Content-Type: application/json' \
--d '{
+Vous pouvez créer une nouvelle entité de plante en envoyant une requête POST à l'API Orion Context Broker :
+
+```bash
+curl -X POST http://localhost:1026/v2/entities -H 'Content-Type: application/json' -d '{ 
   "id": "Plant:002",
   "type": "Plant",
   "name": { "type": "Text", "value": "Ficus Lyrata" },
@@ -80,32 +107,45 @@ curl -X POST http://localhost:1026/v2/entities \
   "lightIntensity": { "type": "Number", "value": 1200, "metadata": { "unitCode": { "type": "Text", "value": "LUX" } } },
   "soilMoisture": { "type": "Number", "value": 72.0, "metadata": { "unitCode": { "type": "Text", "value": "P1" } } }
 }'
-🧰 Ajouter des capteurs
+```
 
-Utilisez Node-RED pour simuler ou connecter des capteurs physiques. Consultez les flows dans services/node-red/flows/.
+#### Configuration des capteurs
 
-📊 Utilisation du tableau de bord
+Vous pouvez configurer des capteurs physiques pour envoyer des données à votre système de jumeau numérique en utilisant les flows Node-RED. Consultez la documentation des flows dans le dossier `services/node-red/flows/` pour plus d'informations.
 
-Le dashboard Node-RED permet :
+## Utilisation du tableau de bord
 
-🔍 Vue d’ensemble des plantes
+Le tableau de bord Node-RED vous permet de surveiller et de gérer vos plantes. Voici les principales fonctionnalités :
 
-🌿 Visualisation jumeau numérique
+- **Vue d'ensemble** : Affiche l'état actuel de toutes vos plantes
+- **Vue jumeau numérique** : Visualisation 3D de la plante et de son environnement
+- **Données historiques** : Graphiques des données historiques des capteurs
+- **Paramètres** : Configuration des seuils d'alerte et des notifications
 
-📈 Historique des données
+## Dépannage
 
-⚠️ Configuration des seuils et alertes
+### Les services ne démarrent pas
 
-🛠️ Dépannage
+Vérifiez les journaux Docker pour identifier les erreurs :
 
-Les services ne démarrent pas ?
-
-Vérifiez les logs :
+```bash
 docker-compose logs
+```
+
 Pour un service spécifique :
+
+```bash
 docker-compose logs mongodb
 docker-compose logs orion
 docker-compose logs node-red
-Réinitialiser la base de données
+```
+
+### Réinitialisation de la base de données
+
+Si vous devez réinitialiser complètement la base de données :
+
+```bash
 docker-compose down -v
 docker-compose up -d
+```
+
